@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatSonic</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <!-- Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+    
+  </head>
+  <body>
+    <div class="container-fluid d-flex flex-row">
+      <div
+        id="scrollwidth"
+        class="d-flex flex-column align-items-stretch flex-shrink-0"
+        style="
+          width: 20%;
+          height: 100vh;
+          overflow: scroll;
+          background-color: #070f2b !important;
+          border: none;
+        "
+      >
+        <div
+          class="container-fluid sticky-element px-0 my-2 mt-5"
+          style="width: 80%; background-color: #271550"
+        >
+          <button
+            class="fs-6 p-0 rounded-4"
+            style="
+              width: 100% !important;
+              height: 100%;
+              background-color: #512da8;
+              border: none;
+              color: white;
+              align-items: center;
+              justify-content: center;
+            "
+            id="btn1"
+            onclick="reload()"
+          >
+            <div class="p-0 py-2 w-100">New Chat</div>
+          </button>
+        </div>
+        <div
+          class="list-group list-group-flush scrollarea mt-3 mb-auto"
+          style="border: none"
+          id="chatHistoryContainer"
+        ></div>
+        <div class="mx-3" style="color: white">
+          <div class="circle" id="first_letter"></div>
+          <span id="user_name"></span>
+        </div>
+      </div>
+      <main
+        class="d-flex flex-column align-items-stretch flex-shrink-0 pb-3"
+        style="
+          width: 80%;
+          max-height: 100vh;
+          background-image: linear-gradient(to right, #e2e2e2, #c9d6ff);
+        "
+      >
+        <nav
+          class="navbar navbar-expand-lg px-4"
+          style="max-height: 10vh; z-index: 1000 !important"
+        >
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#"
+              ><div class="logo-name fs-5 fw-semibold">
+                <span>Chat</span><span style="color: #1972d2">Sonic</span>
+              </div></a
+            >
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <button
+                    class="btn btn-outline-dark mx-2"
+                    onclick="openpromptmodal()"
+                  >
+                    Prompt Library
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button
+                    class="btn btn-outline-primary mx-2"
+                    onclick="send_history()"
+                  >
+                    Mail History
+                  </button>
+                </li>
+              </ul>
+              <form class="d-flex" role="search">
+                <button class="btn btn-outline-danger" onclick="logout()">
+                  Logout
+                </button>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div
+          id="scrolllock"
+          class="d-flex flex-column align-items-stretch flex-shrink-0 px-5 py-3 mb-auto"
+          style="width: 100%; height: 76vh; overflow-y: scroll"
+        >
+          <!-- Loading chats  -->
+
+          <div class="container-fluid" id="load_chats"></div>
+
+          <div
+            class="form-control rounded-4 mt-auto mx-auto text-center"
+            placeholder="Message Chatbot"
+            id="herosection"
+            style="
+              width: 80%;
+              border: none;
+              background-color: transparent !important;
+            "
+          >
+            <div
+              class="container-fluid mt-4 fs-1"
+              style="
+                font-size: 36px;
+                font-family: Georgia, 'Times New Roman', Times, serif;
+                font-weight: bold;
+                background: linear-gradient(
+                  90deg,
+                  #3ba9f3,
+                  #3fccf7,
+                  #3dc5f7,
+                  #22b0ed,
+                  #2d47a8,
+                  #512da8,
+                  #8f2da8,
+                  #a33fbc,
+                  #00ced1,
+                  #1e90ff,
+                  #4682b4,
+                  #7b68ee
+                );
+                -webkit-background-clip: text; /* For Safari */
+                -moz-background-clip: text; /* For Firefox */
+                -ms-background-clip: text; /* For IE */
+                -o-background-clip: text; /* For Opera */
+                background-clip: text; /* Standard property */
+                -webkit-text-fill-color: transparent; /* For Safari */
+              "
+            >
+              ChatSonic
+            </div>
+
+            <div
+              class="container-fluid mb-5 fs-3 me-auto"
+              style="
+                font-family: sans-serif;
+                text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.137);
+                color: #000207bd;
+              "
+            >
+              How can I help you today?
+            </div>
+
+            <div class="container-fluid w-100 mt-5 d-flex">
+              <div
+                class="card mx-3 mb-3 p-3 border-1 shadow-sm box11"
+                style="
+                  background-color: #fff;
+                  width: 50%;
+                  transition: all 0.3s ease-in-out;
+                  cursor: pointer;
+                "
+                onclick="boxtochat(this)"
+              >
+                <div class="card-body p-0 m-0">
+                  <p
+                    class="card-text p-0 m-0"
+                  
+                    style="font-size: 18px; color: #333"
+                  >
+                    What is debit card
+                  </p>
+                </div>
+              </div>
+              <div
+                class="card mx-3 mb-3 p-3 border-1 shadow-sm box11"
+                style="
+                  background-color: #fff;
+                  width: 50%;
+                  transition: all 0.3s ease-in-out;
+                  cursor: pointer;
+                "
+                onclick="boxtochat(this)"
+              >
+                <div class="card-body p-0 m-0">
+                  <p
+                    class="card-text p-0 m-0"
+                    
+                    style="font-size: 18px; color: #333"
+                  >
+                    What is credit card
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="container-fluid mb-3 w-100 d-flex">
+              <div
+                class="card mx-3 mb-3 p-3 border-1 shadow-sm box11"
+                style="
+                  background-color: #fff;
+                  width: 50%;
+                  transition: all 0.3s ease-in-out;
+                  cursor: pointer;
+                "
+                onclick="boxtochat(this)"
+              >
+                <div class="card-body p-0 m-0">
+                  <p
+                    class="card-text p-0 m-0"
+                    style="font-size: 18px; color: #333"
+                  >
+                    What is net banking
+                  </p>
+                </div>
+              </div>
+              <div
+                class="card mx-3 mb-3 p-3 border-1 shadow-sm box11"
+                style="
+                  background-color: #fff;
+                  width: 50%;
+                  transition: all 0.3s ease-in-out;
+                  cursor: pointer;
+                "
+                onclick="boxtochat(this)"
+              >
+                <div class="card-body p-0 m-0">
+                  <p
+                    class="card-text p-0 m-0"
+              
+                    style="font-size: 18px; color: #333"
+                  >
+                    How to open savings account
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container-fluid text-center">
+          <textarea
+            class="form-control mx-auto rounded-4"
+            placeholder="Message Chatbot"
+            id="chat_input"
+            style="height: 9vh; width: 80%; padding-right: 5%"
+          ></textarea
+          ><button
+            class="button fs-4 border px-3 border-2 rounded-4"
+            id="toggleRecording"
+            onclick="toggleRecording()"
+            style="
+              position: relative;
+              right: -36%;
+              top: -54%;
+              height: 40%;
+              color: #ffffff;
+              background-color: rgba(0, 0, 0, 0.553);
+            "
+          >
+            <!-- &#x2191; -->
+            <i style="font-size: 24px" class="fa">&#xf130;</i>
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal for password reset request-->
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="pwd_reset_request"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">
+              Reset Your Password
+            </h1>
+          </div>
+          <div class="modal-body">
+            <label for="recipient-name" class="col-form-label"
+              >Enter Your New Password :</label
+            >
+            <input
+              type="text"
+              placeholder="Password"
+              class="form-control"
+              id="new_pwd_request"
+            />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="reset_password()"
+            >
+              Set Password
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for prompt library-->
+    <div
+      class="modal fade"
+      id="promptmodal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">
+              Prompt Library
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="questionsList">
+        
+            <div
+              class="card mx-3 mb-3 p-3 border-1 shadow-sm promptbox"
+              style="
+                background-color: #fff;
+                transition: all 0.3s ease-in-out;
+                cursor: pointer;
+                width: 95% !important;
+              "
+              onclick="getText(this)"
+            >
+              <div class="card-body p-0 m-0">
+                <p
+                  class="card-text p-0 m-0"
+                  style="font-size: 18px; color: #333"
+                >
+                  What is debit card
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Modal for chathistory email success-->
+<div
+class="modal fade"
+id="chathistory_email_success_modal"
+tabindex="-1"
+aria-labelledby="exampleModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h1 class="modal-title fs-5" id="exampleModalLabel">
+        Chat History sent successfully
+      </h1>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body">
+      The chat history is sent successfully to your registered email
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        data-bs-dismiss="modal"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- Modal for email unsuccess-->
+<div
+class="modal fade"
+id="chathistory_email_error_modal"
+tabindex="-1"
+aria-labelledby="exampleModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h1 class="modal-title fs-5" id="exampleModalLabel">
+        Could not sent chat history
+      </h1>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body">
+      Could not sent the email because currently the server is busy
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        data-bs-dismiss="modal"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+
+
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  </body>
+</html>

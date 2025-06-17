@@ -1,0 +1,97 @@
+
+      .circle {
+        width: 40px; 
+        height: 40px; 
+        border-radius: 50%;
+        background-color: #2d84a8;
+        color: white;
+        font-size: 20px; 
+        text-align: center;
+        line-height: 40px; 
+        margin-right: 10px;
+        display: inline-block;
+      }
+
+      .cursor {
+        width: 10px;
+        height: 20px;
+        background-color: #000;
+        display: inline-block;
+        animation: blink-animation 1s step-end infinite;
+      }
+
+      @keyframes blink-animation {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      .sticky-element {
+        position: sticky;
+        top: 0px;
+        z-index: 100;
+        background-color: #ffffff;
+      }
+      .form-control:focus {
+        outline: none;
+        box-shadow: none;
+      }
+      textarea {
+        resize: none;
+      }
+
+      #scrolllock::-webkit-scrollbar {
+        width: 0;
+      }
+
+      #scrolllock::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      #scrollwidth::-webkit-scrollbar {
+        width: 0px;
+      }
+
+      #scrollwidth::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      #scrollwidth::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 0px;
+      }
+
+      .box11:hover {
+        transform: scale(1.05);
+        transition: 0.3s ease;
+      }
+      .box11:not(:hover) {
+        transition: 0.3s ease;
+      }
+
+      .promptbox:hover {
+        transform: scale(1.02);
+        transition: 0.3s ease;
+      }
+      .promptbox:not(:hover) {
+        transition: 0.3s ease;
+      }
+
+      #btn1:hover {
+        transform: scale(1.05);
+        transition: 0.3s ease;
+      }
+
+      #btn1:not(:hover) {
+        transition: 0.3s ease;
+      }
+
+
+
+
+
+
+
+
+
+
